@@ -26,6 +26,12 @@ export const customerTypeEnum = pgEnum("customer_type", [
 	"INDIVIDUAL",
 	"BUSINESS",
 ]);
+
+export const addressTypeEnum = pgEnum("address_type", [
+	"BILLING",
+	"SHIPPING",
+	"OTHER",
+]);
 export const saleStatusEnum = pgEnum("sale_status", [
 	"DRAFT",
 	"CONFIRMED",
