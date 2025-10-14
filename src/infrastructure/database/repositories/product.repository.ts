@@ -1,0 +1,124 @@
+import { and, desc, eq, like, or } from "drizzle-orm";
+import { Product } from "../../../domain/entities/product.entity";
+import type {
+	ProductFilters,
+	ProductRepository,
+} from "../../../domain/repositories/product.repository";
+import { db } from "../drizzle/client";
+import { products } from "../drizzle/schema";
+import { ProductName } from "../../../domain/value_objects/product_name.vo";
+import { SKU } from "../../../domain/value_objects/sku.vo";
+import { Money } from "../../../domain/value_objects/money.vo";
+
+export class DrizzleProductRepository implements ProductRepository {
+	async save(product: Product): Promise<void> {
+		const existingProduct = await db.query.products.findFirst({
+			where: and(
+				eq(products.id, product.id),
+				eq(products.tenantId, product.tenantId),
+			),
+		});
+
+		const productData = {
+			id: product.id,
+			name: product.name,
+			description: product.description,
+			sku: product.sku,
+			price: product.price.toString(),
+			costPrice: product.costPrice?.toString(),
+			isActive: product.isActive,
+			categoryId: product.categoryId,
+			tenantId: product.tenantId,
+			updatedAt: new Date(),
+		};
+
+		if (existingProduct) {
+			await db
+				.update(products)
+				.set(productData)
+				.where(and(eq(products.id, product.id), eq(products.id, product.id)));
+		}
+
+		await db
+			.insert(products)
+			.values({ ...productData, createdAt: product.createdAt });
+	}
+
+	async findById(id: string, tenantId: string): Promise<Product | null> {
+		const aProduct = await db.query.products.findFirst({
+			where: and(eq(products.id, id), eq(products.tenantId, tenantId)),
+		});
+
+		if (!aProduct) {
+			return null;
+		}
+
+		return this.toDomain(aProduct);
+	}
+
+	async findBySku(sku: string, tenantId: string): Promise<Product | null> {
+		const aProduct = await db.query.products.findFirst({
+			where: and(eq(products.sku, sku), eq(products.tenantId, tenantId)),
+		});
+
+		if (!aProduct) {
+			return null;
+		}
+
+		return this.toDomain(aProduct);
+	}
+
+	async findAll(
+		tenantId: string,
+		filters?: ProductFilters,
+	): Promise<Product[]> {
+		const conditions = [eq(products.tenantId, tenantId)];
+		if (filters?.isActive !== undefined) {
+			conditions.push(eq(products.isActive, filters.isActive));
+		}
+
+		if (filters?.categoryId) {
+			conditions.push(eq(products.categoryId, filters.categoryId));
+		}
+
+		if (filters?.search) {
+			const searchTerm = `%${filters.search}`;
+			conditions.push(
+				or(like(products.name, searchTerm), like(products.sku, searchTerm))!,
+			);
+		}
+
+		const rows = await db.query.products.findMany({
+			where: and(...conditions),
+			orderBy: [desc(products.createdAt)],
+			limit: filters?.limit || 100,
+			offset: filters?.offset || 0,
+		});
+
+		return rows.map((row) => this.toDomain(row));
+	}
+
+	async delete(id: string, tenantId: string): Promise<void> {
+		await db
+			.delete(products)
+			.where(and(eq(products.id, id), eq(products.tenantId, tenantId)));
+	}
+
+	private toDomain(row: typeof products.$inferSelect): Product {
+		return Product.restore({
+			id: row.id,
+			name: ProductName.create(row.name),
+			description: row.description || undefined,
+			sku: SKU.create(row.sku),
+			price: Money.create(Number(row.price)),
+			costPrice: row.costPrice
+				? Money.create(Number(row.costPrice))
+				: undefined,
+			isActive: row.isActive,
+			categoryId: row.categoryId || undefined,
+			tenantId: row.tenantId,
+			createdAt: row.createdAt,
+			updatedAt: row.updatedAt,
+		});
+	}
+}

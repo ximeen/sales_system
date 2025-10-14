@@ -9,6 +9,7 @@ import {
 	varchar,
 } from "drizzle-orm/pg-core";
 import { stocks } from "./stocks";
+import { saleItems } from "./sale_items";
 
 export const products = pgTable("products", {
 	id: uuid("id").primaryKey(),
@@ -19,7 +20,7 @@ export const products = pgTable("products", {
 	costPrice: decimal("cost_price", { precision: 10, scale: 2 }),
 	isActive: boolean("is_active").notNull().default(true),
 	categoryId: uuid("category_id"),
-	tenantId: uuid("tenant_id"),
+	tenantId: uuid("tenant_id").notNull(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

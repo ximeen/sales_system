@@ -5,6 +5,7 @@ export interface ProductRepository {
 	findById(id: string, tenantId: string): Promise<Product | null>;
 	findBySku(sku: string, tenantId: string): Promise<Product | null>;
 	findAll(tenantId: string, filters?: ProductFilters): Promise<Product[]>;
+	delete(id: string, tenantId: string): Promise<void>;
 }
 
 export interface ProductFilters {
