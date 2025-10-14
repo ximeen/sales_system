@@ -15,14 +15,14 @@ export interface StockRepository {
 		tenantId: string,
 	): Promise<Stock | null>;
 	findByProduct(productId: string, tenantId: string): Promise<Stock[]>;
-	findByLocation(locationId: string, tenantId: string): Promise<Stock[]>;
+	findByLocation(locationCode: string, tenantId: string): Promise<Stock[]>;
 	findByLowLevelStock(tenantId: string): Promise<Stock[]>;
 	getMovementHistory(
 		stockId: string,
 		tenantId: string,
 		filters?: MovementFilters,
 	): Promise<StockMovement[]>;
-	getTotalStockByProduct(id: string, tenantId: string): Promise<number>;
+	getTotalStockByProduct(productId: string, tenantId: string): Promise<number>;
 	delete(id: string, tenantId: string): Promise<void>;
 }
 
