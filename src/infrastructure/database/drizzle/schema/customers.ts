@@ -8,6 +8,8 @@ import {
 import { customerTypeEnum } from "./enums";
 import { relations } from "drizzle-orm";
 import { sales } from "./sales";
+import { customerAddresses } from "./customer_addresses";
+import { customerFinancial } from "./customer_financial";
 
 export const customers = pgTable("customers", {
 	id: uuid("id").primaryKey(),

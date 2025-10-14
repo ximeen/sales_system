@@ -9,6 +9,8 @@ import {
 import { customers } from "./customers";
 import { discountTypeEnum, saleStatusEnum } from "./enums";
 import { relations } from "drizzle-orm";
+import { saleItems } from "./sale_items";
+import { payments } from "./payments";
 
 export const sales = pgTable("sales", {
 	id: uuid("id").primaryKey(),
@@ -45,5 +47,4 @@ export const salesRelations = relations(sales, ({ one, many }) => ({
 }));
 
 export type Sale = typeof sales.$inferSelect;
-
 export type NewSale = typeof sales.$inferSelect;

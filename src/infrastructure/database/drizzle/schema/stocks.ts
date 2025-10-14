@@ -8,6 +8,7 @@ import {
 import { products } from "./products";
 import { locationTypeEnum } from "./enums";
 import { relations } from "drizzle-orm";
+import { stockMovements } from "./stock_movements";
 
 export const stocks = pgTable("stocks", {
 	id: uuid("id").primaryKey(),
@@ -33,7 +34,7 @@ export const stockRelations = relations(stocks, ({ one, many }) => ({
 		fields: [stocks.productId],
 		references: [products.id],
 	}),
-	movements: many(stockMovement),
+	movements: many(stockMovements),
 }));
 
 export type Stock = typeof stocks.$inferSelect;
