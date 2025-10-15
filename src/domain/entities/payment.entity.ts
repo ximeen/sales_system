@@ -2,10 +2,10 @@ import { Money } from "../value_objects/money.vo";
 
 export type PaymentMethod =
 	| "CASH"
-	| "CREDID_CARD"
+	| "CREDIT_CARD"
 	| "DEBIT_CARD"
 	| "PIX"
-	| "BANK_SPLIP"
+	| "BANK_SLIP"
 	| "CREDIT";
 
 export type PaymentStatus = "PENDING" | "CONFIRMED" | "CANCELLED";
