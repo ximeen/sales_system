@@ -40,7 +40,9 @@ export class Address {
 	get number(): string {
 		return this.props.number;
 	}
-
+	get street(): string {
+		return this.props.street;
+	}
 	get complement(): string | undefined {
 		return this.props.complement;
 	}

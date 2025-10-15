@@ -5,7 +5,7 @@ export interface CustomerRepository {
 	findById(id: string, tenantId: string): Promise<Customer | null>;
 	findByDocument(document: string, tenantId: string): Promise<Customer | null>;
 	findByEmail(email: string, tenantId: string): Promise<Customer | null>;
-	findAll(tenantId: string): Promise<Customer[]>;
+	findAll(tenantId: string, filters?: CustomerFilters): Promise<Customer[]>;
 	findWithDebt(tenantId: string): Promise<Customer[]>;
 	delete(id: string, tenantId: string): Promise<void>;
 }

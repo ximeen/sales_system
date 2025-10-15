@@ -7,21 +7,7 @@
 
 ## 🏃 Quick Start
 
-### Opção 1: Com Make (recomendado)
-```bash
-# Setup completo automático
-make setup
-
-# Outros comandos úteis
-make up      # Sobe containers
-make down    # Para containers
-make logs    # Ver logs
-make studio  # Abre Drizzle Studio
-make clean   # Limpa tudo
-make reset   # Reset completo
-```
-
-### Opção 2: Com npm scripts
+### Opção 1: Com npm scripts
 ```bash
 # Setup completo
 bun run setup
@@ -110,6 +96,6 @@ src/
 ## 🎯 Próximos passos
 
 1. Configure suas variáveis de ambiente
-2. Rode `make setup` ou `bun run setup`
+2. Rode `bun run setup`
 3. Acesse http://localhost:3000
 4. Comece a codar! 🚀

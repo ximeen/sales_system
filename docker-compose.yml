@@ -2,7 +2,7 @@
 
 services:
   db:
-    image: bitnami/postgres
+    image: bitnami/postgresql
     container_name: sales_system_db
     ports:
       - '${DB_PORT:-5432}:5432'
@@ -11,9 +11,9 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
       POSTGRES_DB: ${DB_NAME:-sales_system}
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     networks:
-        - backend
+        - sales_network 
     healthcheck:
         test: ["CMD-SHELL", "pg_isready -U postgres"]
         interval: 10s

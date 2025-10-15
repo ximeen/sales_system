@@ -5,6 +5,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "bun --watch src/main.ts",
+		"start": "bun src/main.ts",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
@@ -13,8 +14,9 @@
 		"docker:up": "docker compose up -d",
 		"docker:down": "docker compose down",
 		"docker:logs": "docker compose logs -f",
-		"setup": "cp .env.example .env && bun install && bun run docker:up && sleep 5 && bun run db:generate && bun run db:migrate",
-		"reset": "bun run docker:clean && bun run docker:up && sleep 5 && bun run db:generate && bun run db:migrate"
+		"docker:clean": "docker compose down -v",
+		"setup": "cp -n .env.example .env 2>/dev/null || true && bun install && docker compose up -d && sleep 5 && bun run db:generate && bun run db:migrate",
+		"reset": "docker compose down -v && docker compose up -d && sleep 5 && bun run db:generate && bun run db:migrate"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.4",
